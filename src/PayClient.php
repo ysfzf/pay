@@ -25,7 +25,7 @@ class PayClient
         $config=$this->config[$this->type];
         if(empty($config)){
             throw new \Exception('bad config');
-        }         
+        }
         if($this->type==='alipay'){
             $config['ali_public_key']=$this->getAliKey($config['ali_public_key']);
             $config['private_key']=$this->getAliKey($config['private_key']);
@@ -143,7 +143,7 @@ class PayClient
         }
     }
 
-    function refund($type='app',$orderTotalFee=0){
+    function refund($type='',$orderTotalFee=0){
         if(empty($this->out_trade_no)){
             throw new \Exception('Undefined out_trade_no');
         }
@@ -153,9 +153,9 @@ class PayClient
             }
             $order = [
                 'out_trade_no' => $this->out_trade_no,
-                'out_refund_no' => time().rand(100,999),  //退款单号，多次退款时不能重复
-                'total_fee' => $orderTotalFee*100, //这里是订单金额，单位是分
-                'refund_fee' => $this->money*100, //申请退款金额,不能大于订单金额，单位是分
+                'out_refund_no' => time().rand(100,999),
+                'total_fee' => $orderTotalFee*100,
+                'refund_fee' => $this->money*100,
                 'refund_desc' => $this->subject,
                 'type' => $type, //手机app是app 小程序是miniapp 公众号不要
                 'refund_account'=>'REFUND_SOURCE_RECHARGE_FUNDS'  //使用余额退款,否则不要

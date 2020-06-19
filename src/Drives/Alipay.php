@@ -5,7 +5,7 @@ use Yansongda\Pay\Pay;
 
 class Alipay extends Drives
 {
-     
+
     function __construct($config)
     {
         $this->hanld=Pay::alipay($config);

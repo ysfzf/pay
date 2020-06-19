@@ -1,68 +1,88 @@
 ## 使用方法
-这是一个在laravel上使用发送和验证验证码的工具，可以选择是短信或邮件发送验证码。
+测试完善中....
 
-#### 安装
+### 安装
 
 1  使用composer安装依赖
 ```php
-composer require ycpfzf/vcode
+composer require ycpfzf/pay
 ```
 
 2  发布资源
 ```php
 php artisan vendor:publish
 ```
-在列表中选择 Ycpfzf\Vcode\VcodeServiceProvider，运行完毕会在config文件夹生成配置文件vcode.php
-
-
-#### 使用
-
-1 短信验证码
-
-使用阿里云的短信，请先在配置文件config/vcode.php中配置好参数
+在列表中选择 Ycpfzf\Pay\ServiceProvider，运行完毕会在config文件夹生成配置文件pay.php
+env文件配置示例
 ```php
-//不指定场景时使用配置文件中 ['sms']['templates']里的 default键指定的模板发送短信
- Ycpfzf\Vcode\Vcode::sms()->name('13800138000')->send();
-
- //指定场景 login ,必须在配置文件中的 ['sms']['templates']里有login键，并指定模版
- Ycpfzf\Vcode\Vcode::sms()->name('13800138000')->scene('login')->send();
+ALI_APP_ID= 
+ALI_PUBLIC_KEY= 
+ALI_PRIVATE_KEY= 
+WECHAT_APP_ID=
+WECHAT_MINIAPP_ID=
+WECHAT_APPID= 
+WECHAT_MCH_ID= 
+WECHAT_KEY= 
 ```
 
-2 邮件验证码
+### 使用
+#### 支付
 
-使用laravel的Mail发送邮件，所以请先配置后发件参数
+* alipay()  使用支付宝支付
+* wechat()  使用微信支付
+* money($money) 支付金额，不管是支付宝还是微信，统一单位是元。
+* outTradeNo($out_trade_no) 商户定义的支付订单号
+* subject($subject)  支付说明
+* openid($openid)  JSAPI支付必须传openid
+
+各支付类型详见[文档](https://pay.yanda.net.cn/docs/2.x)
+
 ```php
-//不指定场景时，默认是default,会使用模板resources/vidws/emails/default.blade.php
- Ycpfzf\Vcode\Vcode::email()->name('user@test.com')->subject('验证码')->send();
+use Ycpfzf\Pay\Pay;
 
-//使用模板resources/vidws/emails/login.blade.php
- Ycpfzf\Vcode\Vcode::email()->name('user@test.com')->subject('验证码')->scene('login')->send();
-
- //使用模板resources/vidws/code/login.blade.php
- Ycpfzf\Vcode\Vcode::email()->name('user@test.com')->subject('验证码')->scene('code.login')->send();
-
- //向模板传递参数，请注意 $code是要发送的验证码
- Ycpfzf\Vcode\Vcode::email()->name('user@test.com')->subject('验证码')->scene('code.login')->assgin($data)->send();
+Pay::alipay()->outTradeNo($outid)->money(0.1)->subject('测试')->app(); //使用支付宝的app支付0.1元
 ```
 
-3 验证验证码是否正确
+#### 退款
+
+* 退款方法 refund($type='',$orderTotalFee=0)
+* $type表示类别 ，微信app支付的是app,微信小程序支付的是miniapp,其它方式不用
+* $orderTotalFee表示订单金额，为0时表示和退款金额一样，支付宝不用
 
 ```php
-if(Ycpfzf\Vcode\Vcode::email()->name('user@test.com')->check(353283)){
-    echo '验证成功了';
-}else{
-    echo '验证码不正确';
-}
+use Ycpfzf\Pay\Pay;
 
-//如果是短信验证码，将上面的email()方法换成sms()
-```
+Pay::wechat()->outTradeNo($outid)->money(0.1)->subject('7天无理由退款')->refund('app'); 
 
-4 使用队列发送
-
-请先配置好队列，否则可能返回发送成功，但实际没有发送
-```php
- Ycpfzf\Vcode\Vcode::sms()->name('13800138000')->queue();
- Ycpfzf\Vcode\Vcode::email()->name('user@test.com')->subject('验证码')->queue();
+//返回结果
+[
+    'status'=>true,  //退款是否成功
+    'trade_no'=>'xxxx'  //平台返回的退款编号
+]
 ```
 
 
+#### 异步通知
+
+* 通知方法 notify($callback)
+
+```php
+use Ycpfzf\Pay\Pay;
+
+Pay::notify(function($data){
+    
+       .....
+});
+
+//回调函数中参数$data
+[
+    'out_trade_no'=>'xxx'  //商户订单编号 
+    'status'=>true,  //支付是否成功
+    'notify_no'=>//平台编号,
+    'money'=>0.10  //支付金额，单位统一都是元,
+    'appid'=>'xxx',   //商户申请的appid
+    'mch_id'=>'xxx',  //微信时返回mch_id,支付宝返回0
+    'type'=>'wechat',  //类别 wechat 或 alipay
+
+]
+```

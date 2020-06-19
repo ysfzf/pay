@@ -1,9 +1,7 @@
 <?php
-namespace Ycpfzf\Vcode;
+namespace Ycpfzf\Pay;
 
-use Illuminate\Support\ServiceProvider;
-
-class VcodeServiceProvider extends ServiceProvider
+class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
 
     public function register()
@@ -13,10 +11,10 @@ class VcodeServiceProvider extends ServiceProvider
 
     public function boot()
     {
-         
+
         $this->publishes([
             __DIR__.'/../config/pay.php' => config_path('pay.php'),
-            
+
         ]);
     }
 
