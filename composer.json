@@ -1,0 +1,36 @@
+{
+    "name": "ycpfzf/pay",
+    "description": "wechat & alipay ",
+    "type": "library",
+    "keywords": ["laravel", "wechat", "alipay","pay"],
+    "homepage": "https://github.com/mynameisfzf/pay",   
+    "license": "Apache-2.0",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "fzf",
+            "email": "ysfzf@hotmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0.0",
+        "laravel/framework": ">=5.5",
+        "yansongda/pay": "^2.9"
+    },
+    "require-dev": {
+        "laravel/laravel": ">=5.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Ycpfzf\\Pay\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Ycpfzf\\Pay\\ServiceProvider"
+            ]           
+        }
+    }    
+   
+}
