@@ -3,7 +3,7 @@ namespace Ycpfzf\Pay\Drives;
 
 abstract class Drives
 {
-    protected $hanld;
+    protected $handle;
 
     //支付
     abstract function pay($name,$order);
@@ -14,18 +14,18 @@ abstract class Drives
     abstract function notify($callback);
 
     function find($order){
-        return $this->hanld->find($order);
+        return $this->handle->find($order);
     }
 
     function cancel($order){
-        return $this->hanld->cancel($order);
+        return $this->handle->cancel($order);
     }
 
     function close($order){
-        return $this->hanld->close($order);
+        return $this->handle->close($order);
     }
 
     function verify(){
-        return $this->hanld->verify();
+        return $this->handle->verify();
     }
 }

@@ -8,19 +8,19 @@ class Alipay extends Drives
 
     function __construct($config)
     {
-        $this->hanld=Pay::alipay($config);
+        $this->handle=Pay::alipay($config);
     }
 
     //支付
     function pay($name, $arguments)
     {
-        return $this->hanld->$name($arguments)->getContent();
+        return $this->handle->$name($arguments)->getContent();
     }
 
     //退款
     function refund($order)
     {
-        $pay = $this->hanld->refund($order);
+        $pay = $this->handle->refund($order);
         $ret=$pay->toArray();
         Log::debug('Alipay refund',$ret);
         if($ret){
@@ -52,6 +52,6 @@ class Alipay extends Drives
         }else{
             throw new \Exception('Undefined out_trade_id');
         }
-        return $this->hanld->success()->send();
+        return $this->handle->success()->send();
     }
 }

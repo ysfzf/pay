@@ -67,13 +67,21 @@ class PayClient
         return $this;
     }
 
-    function wechat(){
+    function wechat($config=[]){
         $this->type='wechat';
+        if($config){
+            $this->config['wechat']=array_merge($this->config['wechat'],$config);
+        }
+
         return $this;
     }
 
     function alipay(){
         $this->type='alipay';
+        if($config){
+            $this->config['alipay']=array_merge($this->config['alipay'],$config);
+        }
+
         return $this;
     }
 
@@ -89,8 +97,6 @@ class PayClient
         if(empty($this->out_trade_no)){
             throw new \Exception('Undefined out_trade_no');
         }
-
-       // $order['out_trade_no']=$this->out_trade_no;
         return $this->getPayInstance()->find($this->out_trade_no);
     }
 

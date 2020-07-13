@@ -7,16 +7,16 @@ use Yansongda\Pay\Pay;
 
 class Wechat extends Drives
 {
-    
+
     function __construct($config)
     {
-        $this->hanld=Pay::wechat($config);
+        $this->handle=Pay::wechat($config);
     }
 
     //支付
     function pay($name, $arguments)
     {
-        $pay= $this->hanld->$name($arguments);
+        $pay= $this->handle->$name($arguments);
         if($pay instanceof JsonResponse || $pay instanceof Response){
             $content=$pay->getContent();
             if($content){
@@ -28,7 +28,7 @@ class Wechat extends Drives
     }
 
     function refund($order){
-        $pay = $this->hanld->refund($order);
+        $pay = $this->handle->refund($order);
         $ret=$pay->toArray();
         Log::debug('Wechat refund',$ret);
         if($ret){
@@ -60,6 +60,6 @@ class Wechat extends Drives
         }else{
             throw new \Exception('未知out_trade_id');
         }
-        return $this->hanld->success()->send();
+        return $this->handle->success()->send();
     }
 }
