@@ -76,7 +76,7 @@ class PayClient
         return $this;
     }
 
-    function alipay(){
+    function alipay($config=[]){
         $this->type='alipay';
         if($config){
             $this->config['alipay']=array_merge($this->config['alipay'],$config);
