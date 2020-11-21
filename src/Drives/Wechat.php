@@ -30,7 +30,7 @@ class Wechat extends Drives
     function refund($order){
         $pay = $this->handle->refund($order);
         $ret=$pay->toArray();
-        Log::debug('Wechat refund',$ret);
+        
         if($ret){
             return [
                 'status'=>$ret['return_code']=='SUCCESS',
@@ -45,11 +45,11 @@ class Wechat extends Drives
         // TODO: Implement notify() method.
         $data = $this->verify();
         $ret=$data->all();
-        Log::debug('Wechat notify',$ret );
-        if(isset($ret['out_trade_no'])){
+       
+        if($ret['return_code'] && $ret['return_code']=='SUCCESS'){
             $notify= [
                 'out_trade_no'=>$ret['out_trade_no'],
-                'status'=>$ret['return_code'] == 'SUCCESS'?true:false,
+                'status'=>$ret['result_code'] == 'SUCCESS'?true:false,
                 'notify_no'=>$ret['transaction_id'],
                 'money'=>$ret['total_fee']/100,
                 'appid'=>$ret['appid'],
@@ -58,7 +58,7 @@ class Wechat extends Drives
             ];
             call_user_func_array($callback,['notify'=>$notify]);
         }else{
-            throw new \Exception('未知out_trade_id');
+            throw new \Exception('wechat pay return faild');
         }
         return $this->handle->success()->send();
     }

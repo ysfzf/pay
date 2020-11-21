@@ -22,7 +22,7 @@ class Alipay extends Drives
     {
         $pay = $this->handle->refund($order);
         $ret=$pay->toArray();
-        Log::debug('Alipay refund',$ret);
+        
         if($ret){
             return [
                 'status'=>$ret['code']==10000,
