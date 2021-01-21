@@ -24,8 +24,6 @@ return [
             //  'max_file' => 30,
         ],
 
-        // optional，设置此参数，将进入沙箱模式
-        // 'mode' => 'dev',
     ],
 
     'wechat' => [
@@ -60,10 +58,7 @@ return [
             //  'type' => 'single', // optional, 可选 daily.
             //  'max_file' => 30,
         ],
-
-        // optional
-        // 'dev' 时为沙箱模式s
-        // 'hk' 时为东南亚节点
-        // 'mode' => 'dev',
     ],
+
+    'sandbox'=>env('PAY_SANDBOX'),  //沙箱模式
 ];

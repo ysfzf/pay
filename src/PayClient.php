@@ -12,13 +12,17 @@ class PayClient
     protected $out_trade_no;
     protected $type='alipay';
     protected $openid;  //JSAPI支付必须传openid
-
+    protected $productId=0; //NATIVE时此参数必传
+    protected $sandbox=false;  //沙箱模式
     protected $methods=[
         'wechat'=>['mp','miniapp','wap','scan','pos','app','transfer','redpack','groupRedpack'],
         'alipay'=>['web','wap','app','pos','scan','transfer','mini']
     ];
     function __construct($config=[])    {
         $this->config=$config;
+        if($this->config['sandbox']){
+            $this->sandbox=true;
+        }
     }
 
     protected function getConfig(){
@@ -29,6 +33,9 @@ class PayClient
         if($this->type==='alipay'){
             $config['ali_public_key']=$this->getAliKey($config['ali_public_key']);
             $config['private_key']=$this->getAliKey($config['private_key']);
+        }
+        if($this->sandbox){
+            $config['mode']='dev';
         }
         return $config;
     }
@@ -59,6 +66,11 @@ class PayClient
 
     function subject($str){
         $this->subject=$str;
+        return $this;
+    }
+
+    function productId($id){
+        $this->productId=$id;
         return $this;
     }
 
@@ -128,11 +140,16 @@ class PayClient
                 throw new \Exception('Undefined out_trade_no');
             }
             if($this->type=='wechat'){
+                if($this->sandbox){
+                    $this->money=1.01;
+                }
                 $order = [
                     'out_trade_no' => $this->out_trade_no,
                     'total_fee' => $this->money*100,
                     'body' => $this->subject,
+                    'product_id'=>$this->productId
                 ];
+
                 if(!empty($this->openid)){ //JSAPI支付必须传openid
                     $order['openid']=$this->openid;
                 }
