@@ -52,6 +52,6 @@ class Alipay extends Drives
         }else{
             throw new \Exception('Undefined out_trade_id');
         }
-        return $this->handle->success()->send();
+        return $this->handle->success();
     }
 }

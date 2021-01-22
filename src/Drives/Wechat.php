@@ -60,6 +60,6 @@ class Wechat extends Drives
         }else{
             throw new \Exception('wechat pay return faild');
         }
-        return $this->handle->success()->send();
+        return $this->handle->success();
     }
 }
