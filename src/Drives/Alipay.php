@@ -2,6 +2,7 @@
 namespace Ycpfzf\Pay\Drives;
 use Yansongda\Pay\Log;
 use Yansongda\Pay\Pay;
+use Ycpfzf\Pay\Notify;
 
 class Alipay extends Drives
 {
@@ -22,7 +23,7 @@ class Alipay extends Drives
     {
         $pay = $this->handle->refund($order);
         $ret=$pay->toArray();
-        
+
         if($ret){
             return [
                 'status'=>$ret['code']==10000,
@@ -39,15 +40,14 @@ class Alipay extends Drives
         $ret=$data->all();
         Log::debug('Alipay notify',$ret);
         if(isset($ret['out_trade_no'])){
-            $notify= [
-                'out_trade_no'=>$ret['out_trade_no'],
-                'status'=>$ret['trade_status']=='TRADE_SUCCESS',
-                'notify_no'=>$ret['trade_no'],
-                'money'=>$ret['buyer_pay_amount'],
-                'appid'=>$ret['app_id'],
-                'mch_id'=>0,
-                'type'=>'alipay',
-            ];
+            $notify=new Notify();
+            $notify->money=$ret['buyer_pay_amount'];
+            $notify->status=$ret['trade_status']=='TRADE_SUCCESS';
+            $notify->out_trade_no=$ret['out_trade_no'];
+            $notify->type='alipay';
+            $notify->appid=$ret['app_id'];
+            $notify->mch_id=0;
+            $notify->notify_no=$ret['trade_no'];
             call_user_func_array($callback,['notify'=>$notify]);
         }else{
             throw new \Exception('Undefined out_trade_id');
