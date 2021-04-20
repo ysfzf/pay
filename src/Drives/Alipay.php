@@ -15,7 +15,14 @@ class Alipay extends Drives
     //支付
     function pay($name, $arguments)
     {
-        return $this->handle->$name($arguments)->getContent();
+        $ret=$this->handle->$name($arguments);
+        if($ret){
+            if($ret instanceof Collection){
+                return $ret;
+            }
+            return $ret->getContent();
+        }
+        throw new \Exception('调用支付失败');
     }
 
     //退款
