@@ -3,6 +3,7 @@ namespace Ycpfzf\Pay\Drives;
 use Yansongda\Pay\Log;
 use Yansongda\Pay\Pay;
 use Ycpfzf\Pay\Notify;
+use Yansongda\Supports\Collection;
 
 class Alipay extends Drives
 {
