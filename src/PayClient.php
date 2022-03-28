@@ -184,7 +184,7 @@ class PayClient
                 'refund_account'=>'REFUND_SOURCE_RECHARGE_FUNDS'  //使用余额退款,否则不要
             ];
 
-        }elseif($this->type='alipay'){
+        }else{
             $order = [
                 'out_trade_no' => $this->out_trade_no,
                 'refund_amount' => $this->money,
