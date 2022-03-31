@@ -195,7 +195,7 @@ class PayClient
     }
 
     function notify($callback){
-        $this->getPayInstance()->notify($callback);
+        return $this->getPayInstance()->notify($callback);
     }
 
 }
